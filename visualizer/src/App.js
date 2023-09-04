@@ -8,6 +8,17 @@ import Switch from "react-switch";
 
 import { properties } from './properties.js';
 
+function Temperature({ value }) {
+    const color = "hsl(" + 60 * (1 - (value - 300) / (1000 - 300)) + " 100% 50%)"
+    console.log(color)
+
+    return (
+        <div className="temp-field" style={{background: color}}>
+            {value}
+        </div>
+    )
+}
+
 function App() {
     let [points, setPoints] = useState([]);
 
@@ -26,6 +37,7 @@ function App() {
     }
 
     const switchOn = points.length === 0 ? false : !!points[points.length - 1].state;
+    const temperature = points.length === 0 ? 300 : points[points.length - 1].temp;
 
     useEffect(() => {
         const source = new EventSource(properties.baseUrl + properties.eventsPath);
@@ -42,7 +54,7 @@ function App() {
     }, []);
 
     return (
-        <div>
+        <div style={{display: "flex", alignItems: "center"}}>
             <div style={{width: "800px"}}>
                 <Line data={data}/>
             </div>
@@ -57,6 +69,7 @@ function App() {
                     checkedIcon={false}
                     className="react-switch"
                   />
+                <Temperature value={temperature}/>
             </div>
         </div>
     );
