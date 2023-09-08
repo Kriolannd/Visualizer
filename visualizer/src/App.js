@@ -2,7 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 
 import { useEffect, useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import { Line, Scatter } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import Switch from "react-switch";
 
@@ -44,15 +44,16 @@ function App() {
     let [points, setPoints] = useState([]);
 
     const data = {
-        labels: points.map(row => row.time),
         datasets: [
             {
                 label: 'True temperature',
-                data: points.map(row => row.temp)
+                data: points.map(row => ({x: row.time, y: row.temp})),
+                showLine: true,
             },
             {
                 label: 'Apparent temperature',
-                data: points.map(row => row.temp_apparent)
+                data: points.map(row => ({x: row.time, y: row.temp_apparent})),
+                showLine: true,
             }
         ]
     }
@@ -67,7 +68,7 @@ function App() {
     const temperature = lastOrdefault(points, "temp", 300);
     const apparentTemperature = lastOrdefault(points, "temp_apparent", 300);
 
-    const minX = lastOrdefault(points, "time", 0) - 60;
+    const minX = lastOrdefault(points, "time", 0) - 30e3;
 
 //     const switchOn = points.length === 0 ? false : !!points[points.length - 1].state;
 //     const temperature = points.length === 0 ? 300 : points[points.length - 1].temp;
@@ -82,7 +83,7 @@ function App() {
             startTime = startTime || Date.now();
 
             let newPoint = JSON.parse(e.data);
-//            newPoint.time = startTime + newPoint.time * 1e3;
+            newPoint.time = startTime + newPoint.time * 1e3;
 
             console.log(newPoint);
 
@@ -97,21 +98,23 @@ function App() {
     return (
         <div style={{display: "flex", alignItems: "center"}}>
             <div style={{width: "800px"}}>
-                <Line data={data} options={{
+                <Scatter data={data} options={{
                                             animation: {
                                                     duration: 0
                                                 },
                                             scales: {
                                               x: {
-                                                ticks: {
-                                                    callback: (yValue) => {
-                                                        return Math.floor(yValue); // format to your liking
-                                                      },
-                                                  },
-                                                  /*type: 'time',
+                                                // ticks: {
+                                                //     format: { maximumFractionDigits: 1, minimumFractionDigits: 1 },
+                                                    // callback: (x, i, t) => {
+                                                    //     console.log(x, i, t);
+                                                    //     return x//Math.floor(x); // format to your liking
+                                                    //   },
+                                                //   },
+                                                  type: 'time',
                                                   time: {
                                                       unit: 'second'
-                                                  },*/
+                                                  },
                                                   min: minX,
                                               }
                                             }
