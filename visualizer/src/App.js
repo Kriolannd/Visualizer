@@ -1,4 +1,3 @@
-import playButton from './play-button-svgrepo-com.svg';
 import './App.css';
 
 import { useEffect, useState } from 'react';
