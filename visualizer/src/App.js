@@ -21,6 +21,25 @@ function Temperature({ value }) {
     )
 }
 
+function Controls({text, switchOn, temperature}) {
+    return (
+        <div className="controls">
+            <div>{text}</div>
+            <Switch
+                checked={switchOn}
+                onChange={() => fetch(properties.baseUrl + properties.switchPath, {method: 'POST'})}
+                handleDiameter={28}
+                height={40}
+                width={100}
+                uncheckedIcon={false}
+                checkedIcon={false}
+                className="react-switch"
+            />
+            <Temperature value={temperature}/>
+        </div>
+    )
+}
+
 function App() {
     let [points, setPoints] = useState([]);
 
@@ -38,10 +57,22 @@ function App() {
         ]
     }
 
-    const switchOn = points.length === 0 ? false : !!points[points.length - 1].state;
-    const temperature = points.length === 0 ? 300 : points[points.length - 1].temp;
-//    const minX = points.length === 0 ? Date.now() : points[points.length - 1].time - 60e3;
-    const minX = points.length === 0 ? 0 : points[points.length - 1].time - 60;
+    function lastOrdefault(objArr, param, defaultVal) {
+        return objArr.length === 0 ? defaultVal : objArr[objArr.length - 1][param];
+    }
+
+    const switchOn = !!lastOrdefault(points, "state", false);
+    const apparentSwitchOn = !!lastOrdefault(points, "state_apparent", false);
+
+    const temperature = lastOrdefault(points, "temp", 300);
+    const apparentTemperature = lastOrdefault(points, "temp_apparent", 300);
+
+    const minX = lastOrdefault(points, "time", 0) - 60;
+
+//     const switchOn = points.length === 0 ? false : !!points[points.length - 1].state;
+//     const temperature = points.length === 0 ? 300 : points[points.length - 1].temp;
+// //    const minX = points.length === 0 ? Date.now() : points[points.length - 1].time - 60e3;
+//     const minX = points.length === 0 ? 0 : points[points.length - 1].time - 60;
 
     useEffect(() => {
         const source = new EventSource(properties.baseUrl + properties.eventsPath);
@@ -72,6 +103,11 @@ function App() {
                                                 },
                                             scales: {
                                               x: {
+                                                ticks: {
+                                                    callback: (yValue) => {
+                                                        return Math.floor(yValue); // format to your liking
+                                                      },
+                                                  },
                                                   /*type: 'time',
                                                   time: {
                                                       unit: 'second'
@@ -82,17 +118,8 @@ function App() {
                                             }}/>
             </div>
             <div>
-                <Switch
-                    checked={switchOn}
-                    onChange={() => fetch(properties.baseUrl + properties.switchPath)}
-                    handleDiameter={28}
-                    height={40}
-                    width={100}
-                    uncheckedIcon={false}
-                    checkedIcon={false}
-                    className="react-switch"
-                  />
-                <Temperature value={temperature}/>
+                <Controls text="True parameters" switchOn={switchOn} temperature={temperature}/>
+                <Controls text="Apparent parameters" switchOn={apparentSwitchOn} temperature={apparentTemperature}/>
             </div>
         </div>
     );
