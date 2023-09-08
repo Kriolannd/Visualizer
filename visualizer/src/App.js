@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+import playButton from './play-button-svgrepo-com.svg';
 import './App.css';
 
 import { useEffect, useState } from 'react';
@@ -21,7 +21,7 @@ function Temperature({ value }) {
     )
 }
 
-function Controls({text, switchOn, temperature}) {
+function ControlParams({text, switchOn, temperature}) {
     return (
         <div className="controls">
             <div>{text}</div>
@@ -40,18 +40,27 @@ function Controls({text, switchOn, temperature}) {
     )
 }
 
+function ControlButton() {
+    const handleClick = (e) => {
+        e.target.classList.toggle("play-btn");
+        e.target.classList.toggle("pause-btn");
+        fetch(properties.baseUrl + properties.togglePath, {method: 'POST'});
+    }
+    return <button className="controls btn play-btn" onClick={handleClick}></button>;
+}
+
 function App() {
     let [points, setPoints] = useState([]);
 
     const data = {
         datasets: [
             {
-                label: 'True temperature',
+                label: "True temperature",
                 data: points.map(row => ({x: row.time, y: row.temp})),
                 showLine: true,
             },
             {
-                label: 'Apparent temperature',
+                label: "Apparent temperature",
                 data: points.map(row => ({x: row.time, y: row.temp_apparent})),
                 showLine: true,
             }
@@ -103,7 +112,7 @@ function App() {
                                                     duration: 0
                                                 },
                                             scales: {
-                                              x: {
+                                                x: {
                                                 // ticks: {
                                                 //     format: { maximumFractionDigits: 1, minimumFractionDigits: 1 },
                                                     // callback: (x, i, t) => {
@@ -111,18 +120,19 @@ function App() {
                                                     //     return x//Math.floor(x); // format to your liking
                                                     //   },
                                                 //   },
-                                                  type: 'time',
-                                                  time: {
-                                                      unit: 'second'
-                                                  },
-                                                  min: minX,
+                                                    type: "time",
+                                                    time: {
+                                                        unit: "second"
+                                                    },
+                                                    min: minX,
                                               }
                                             }
                                             }}/>
             </div>
             <div>
-                <Controls text="True parameters" switchOn={switchOn} temperature={temperature}/>
-                <Controls text="Apparent parameters" switchOn={apparentSwitchOn} temperature={apparentTemperature}/>
+                <ControlButton/>
+                <ControlParams text="True parameters" switchOn={switchOn} temperature={temperature}/>
+                <ControlParams text="Apparent parameters" switchOn={apparentSwitchOn} temperature={apparentTemperature}/>
             </div>
         </div>
     );
