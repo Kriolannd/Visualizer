@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 170 337" width="340" height="674">
+<defs>
+  <pattern id="p" patternUnits="userSpaceOnUse" width="170" height="24">
+    <path fill="none" stroke="#a9a9a9" d='M113 0.5V25H169V0.5H0.5V25H113z'/>
+  </pattern>
+</defs>
+<g transform='translate(.5,.5)'>
+<rect fill='white' width='169' height='336'/>
+<rect fill='#f2f2f2' width='169' height='24'/>
+<g transform='translate(113,0)'>
+<rect fill='#630000' width='56' height='24' y='24'/>
+<rect fill='#770000' width='56' height='24' y='48'/>
+<rect fill='#960000' width='56' height='24' y='72'/>
+<rect fill='#a90000' width='56' height='24' y='96'/>
+<rect fill='#cc0000' width='56' height='24' y='120'/>
+<rect fill='#dd0000' width='56' height='24' y='144'/>
+<rect fill='#ee0000' width='56' height='24' y='168'/>
+<rect fill='#fa0103' width='56' height='24' y='192'/>
+<rect fill='#ff9933' width='56' height='24' y='216'/>
+<rect fill='#fdcc00' width='56' height='24' y='240'/>
+<rect fill='#fdfe33' width='56' height='24' y='264'/>
+<rect fill='#f2f88e' width='56' height='24' y='288'/>
+<rect fill='#ffffff' width='56' height='24' y='312'/>
+</g>
+<g text-anchor='end' font-family='sans-serif' font-size='11px' transform='translate(70,0)'>
+
+<switch text-anchor='middle' font-weight='bold' transform='translate(-70,0) translate(56.5,17)'>
+<text systemLanguage='en'>Temperature (°C)</text>
+<text systemLanguage='de'>Temperatur (°C)</text>
+<text systemLanguage='ru' font-size='10px'>Температура (°C)</text>
+<text>Temperature (°C)</text>
+</switch>
+
+<switch text-anchor='middle' font-weight='bold' transform='translate(-70,0) translate(141,17)'>
+<text systemLanguage='en'>Color</text>
+<text systemLanguage='de'>Farbe</text>
+<text systemLanguage='ru' font-size='10px'>Цвет</text>
+<text>Temperature (°C)</text>
+</switch>
+
+<text y='40'>550</text>
+<text y='64'>630</text>
+<text y='88'>680</text>
+<text y='112'>740</text>
+<text y='136'>770</text>
+<text y='160'>800</text>
+<text y='184'>850</text>
+<text y='208'>900</text>
+<text y='232'>950</text>
+<text y='256'>1000</text>
+<text y='280'>1100</text>
+<text y='304'>1200</text>
+<text y='328'>1300</text>
+</g>
+</g>
+<rect fill='url(#p)' width='170' height='337'/>
+</svg>
