@@ -1,6 +1,6 @@
 import './App.css';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Line, Scatter } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import Switch from "react-switch";
@@ -39,17 +39,64 @@ function ControlParams({text, switchOn, temperature}) {
     )
 }
 
-function ControlButton() {
+function ControlButton({isDead}) {
+    const firstRender = useRef(true);
+
+    let className = "controls btn ";
+    if (firstRender.current) {
+        className += "play-btn";
+        firstRender.current = false;
+    }
+    else {
+        className += (!isDead ? "pause-btn" : "retry-btn");
+    };
+
     const handleClick = (e) => {
         e.target.classList.toggle("play-btn");
         e.target.classList.toggle("pause-btn");
         fetch(properties.baseUrl + properties.togglePath, {method: 'POST'});
-    }
-    return <button className="controls btn play-btn" onClick={handleClick}></button>;
+    };
+
+    return <button className={className} onClick={handleClick}></button>;
 }
 
 function App() {
-    let [points, setPoints] = useState([]);
+    const [points, setPoints] = useState([]);
+    const [isDead, setIsDead] = useState(false);
+    const isDeadRef = useRef(isDead);
+    
+    useEffect(() => {
+        isDeadRef.current = isDead;
+    }, [isDead]);
+
+    useEffect(() => {
+        const source = new EventSource(properties.baseUrl + properties.eventsPath);
+
+        let startTime;
+        source.onmessage = (e) => {
+            if (isDeadRef.current) {
+                startTime = undefined;
+                setPoints([]);
+                setIsDead(false);
+            }
+
+            let newPoint = JSON.parse(e.data);
+            console.log(newPoint);
+            
+            if (newPoint.dead) {
+                setIsDead(true);
+            }
+            else {
+                startTime = startTime || Date.now();
+                newPoint.time = startTime + newPoint.time * 1e3;
+                setPoints(points => [...points, newPoint]);
+            }
+        };
+
+        return () => {
+          source.close();
+        };
+    }, []);
 
     const data = {
         datasets: [
@@ -78,31 +125,6 @@ function App() {
 
     const minX = lastOrdefault(points, "time", 0) - 30e3;
 
-//     const switchOn = points.length === 0 ? false : !!points[points.length - 1].state;
-//     const temperature = points.length === 0 ? 300 : points[points.length - 1].temp;
-// //    const minX = points.length === 0 ? Date.now() : points[points.length - 1].time - 60e3;
-//     const minX = points.length === 0 ? 0 : points[points.length - 1].time - 60;
-
-    useEffect(() => {
-        const source = new EventSource(properties.baseUrl + properties.eventsPath);
-
-        let startTime;
-        source.onmessage = (e) => {
-            startTime = startTime || Date.now();
-
-            let newPoint = JSON.parse(e.data);
-            newPoint.time = startTime + newPoint.time * 1e3;
-
-            console.log(newPoint);
-
-            setPoints(points => [...points, newPoint]);
-        };
-
-        return () => {
-          source.close();
-        };
-    }, []);
-
     return (
         <div style={{display: "flex", alignItems: "center"}}>
             <div style={{width: "800px"}}>
@@ -129,7 +151,7 @@ function App() {
                                             }}/>
             </div>
             <div>
-                <ControlButton/>
+                <ControlButton isDead={isDead}/>
                 <ControlParams text="True parameters" switchOn={switchOn} temperature={temperature}/>
                 <ControlParams text="Apparent parameters" switchOn={apparentSwitchOn} temperature={apparentTemperature}/>
             </div>
