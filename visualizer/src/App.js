@@ -9,13 +9,53 @@ import { properties } from './properties.js';
 
 import 'chartjs-adapter-date-fns';
 
+import {ReactComponent as ColorTable} from './Incandescence_Color.svg';
+
+function colorFromTemp(value) {
+    switch (true) {
+        case value <= 550:
+            return "#630000"
+        case value <= 630:
+            return "#770000"
+        case value <= 680:
+            return "#960000"
+        case value <= 740:
+            return "#a90000"
+        case value <= 770:
+            return "#cc0000"
+        case value <= 800:
+            return "#dd0000"
+        case value <= 850:
+            return "#ee0000"
+        case value <= 900:
+            return "#fa0103"
+        case value <= 950:
+            return "#ff9933"
+        case value <= 1000:
+            return "#fdcc00"
+        case value <= 1100:
+            return "#fdfe33"
+        case value <= 1200:
+            return "#f2f88e"
+        case value > 1200:
+            return "#ffffff"
+    }
+};
+
+function ColorScale({ temperature }) {
+    const color = colorFromTemp(temperature);
+//    console.log(color);
+
+    return <div style={{background: color, width: "70px", height:"400px"}}/>;
+}
+
 function Temperature({ value }) {
-    const color = "hsl(" + 60 * (1 - (value - 300) / (1000 - 300)) + " 100% 50%)"
-//    console.log(color)
+//    const color = "hsl(" + 60 * (1 - (value - 300) / (1000 - 300)) + " 100% 50%)"
+    const color = colorFromTemp(value);
 
     return (
         <div className="temp-field" style={{background: color}}>
-            {value}
+            <font style={{color: "white", WebkitTextStroke: "1px black"}}>{value}</font>
         </div>
     )
 }
@@ -155,6 +195,10 @@ function App() {
                 <ControlParams text="True parameters" switchOn={switchOn} temperature={temperature}/>
                 <ControlParams text="Apparent parameters" switchOn={apparentSwitchOn} temperature={apparentTemperature}/>
             </div>
+            <div style={{display: "flex"}}>
+                <ColorTable className="color-table"/>
+                <ColorScale temperature={temperature}/>
+             </div>
         </div>
     );
 }
