@@ -1,5 +1,5 @@
 export const properties = {
-    baseUrl: "http://localhost:8000/",
+    baseUrl: "http://phys-mode:8000/",
     switchPath: "switch/",
     togglePath: "toggle/",
     eventsPath: "events/",
