@@ -1,8 +1,6 @@
-FROM ubuntu:22.04
+FROM node:20
 
 COPY . Visualizer
 
-RUN apt-get update \
-    && apt-get -y install --no-install-recommends npm nodejs \
-    && cd Visualizer/visualizer && npm install
+RUN cd Visualizer/visualizer && npm install
 
