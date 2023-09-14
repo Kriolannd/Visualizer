@@ -5,11 +5,12 @@ import { Line, Scatter } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import Switch from "react-switch";
 
-import { properties } from './properties.js';
-
 import 'chartjs-adapter-date-fns';
 
 import {ReactComponent as ColorTable} from './Incandescence_Color.svg';
+
+const searchParams = new URLSearchParams(global.location.search);
+const properties = JSON.parse(searchParams.get("props"));
 
 function colorFromTemp(value) {
     switch (true) {
